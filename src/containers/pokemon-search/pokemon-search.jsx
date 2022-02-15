@@ -1,11 +1,12 @@
 import { useState } from "react"
 import axios from "axios"
+import LoadingScreen from "../../components/loading-screen/loading-screen"
 
 
 const PokemonSearch = () => {
 
     const [isLoading, setLoading] = useState(false)
-    const [errorMsg, setErrorMsg] = useState('')
+    const [errorMessage, setErrorMessage] = useState('')
     const [pokemonData, setPokemonData] = useState(null)
 
 
@@ -14,7 +15,7 @@ const PokemonSearch = () => {
 
         //remise à zero du state
         setLoading(true)
-        setErrorMsg('')
+        setErrorMessage('')
         setPokemonData(null)
 
         // envoi de la requete ajax
@@ -22,19 +23,23 @@ const PokemonSearch = () => {
 
             .then(response =>{
 
-                const data = {                   
+                setPokemonData ({                   
                      name: response.data.name,                     
                      legendary: response.data.is_legendary,                     
                      habitat:response.data.habitat?.name,                     
                      captureRate:response.data.capture_rate,                     
                      flavorText :'TODO'               
-                    };
+                    });
+
+
             })
 
-            .catch(error=>{})
+            .catch(error=>{
+                setErrorMessage(error.message);
+            })
 
             .finally(()=> {
-
+                setLoading(false);
             })
     }
 
@@ -44,6 +49,13 @@ const PokemonSearch = () => {
         <main>
             <h1>Demo Ajax- Recherche de pokemon</h1>
             <button onClick={handleSearchPokemon}> Rechercher un pokemon</button>
+            {isLoading ? (
+                <LoadingScreen />
+            ) : errorMessage? (
+                <h2>{errorMessage}</h2>
+                ) : pokemonData !== null && (
+                    <Pokemon {...pokemonData} />
+            )}
 
         </main>
     )
