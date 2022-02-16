@@ -8,7 +8,7 @@ const Pokemon = ({name, legendary, habitat, captureRate, flavorText}) => {
     return(
         <article>
             <h2>{name}</h2>
-            {legendary &&(
+            {legendary && (
                 <p>Pokemon legendary</p>
 
             )}
